@@ -28,15 +28,15 @@ docker compose up -> to run the container inside Docker
 - Open Command Prompt and Change directory (cd) to folder containing pom.xml/Import the projects into the IDE in order to launch them from there.
 - Before launching the applications make sure the rabbitMQ container/server is running. PS: the app is configured to run with the default ports for rabbitMQ !!!
 - IMPORTAT!! Run the applicatins as spring boot app, they must be run in a specific order:
-		1)	eureka-server
-		2),3)	persitence-service/transaction-service, doesn't really matter, the only thing is that they must register to the service discovery server.
-		4)	api-gateway
+		- 1)	eureka-server
+		- 2),3)	persitence-service/transaction-service, doesn't really matter, the only thing is that they must register to the service discovery server.
+		- 4)	api-gateway
 
 #### The applications can be found at the following ports:(existing configuration)
-eureka-server port: 8761(default)
-persitence-service port: 8000
-transaction-service port: 8100
-api-gateway port: 8765
+- eureka-server port: 8761(default)
+- persitence-service port: 8000
+- transaction-service port: 8100
+- api-gateway port: 8765
 
 They can be changed based on your environment using command line arguments -Dserver.port=XXXX, with the desired port.
 
