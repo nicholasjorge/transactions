@@ -66,7 +66,8 @@ The second way to access the persistence-service enpoints is through the Zuul Pr
 
 Lastly, using spring-cloud-sleuth, i enabled log tracing through distributed microservices, in order to trace the log informations between microservices.
 
-#### MENTIONS: i did not implemented a centralized server for logging, it could be Zipkin or ELK stack in order to see the whole flow of the message/requests and the duration of the process.
+#### MENTIONS: 
+I did not implemented a centralized server for logging, it could be Zipkin or ELK stack in order to see the whole flow of the message/requests and the duration of the process.
 I did not implemented also the config server for centralized configuration, using the git repo for my configuration, used to refresh the properties without build and deployment, just using the actuator /refresh endpoint.
 Also missing from the applications is the security part, which can be implement easly in the gateway, with in-memory/database/oauth2 security.
 Also i don't have a front-end for the application for better look of the extracted data.
