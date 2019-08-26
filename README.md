@@ -22,7 +22,7 @@ ADVICE: The easiest way to have access to RabbitMQ is to have Docker installed a
 
 docker compose up -> to run the container inside Docker
 
-### Running the applications
+#### Running the applications
 - Download the zip or clone the Git repository.
 - Unzip the zip file (if you downloaded one)
 - Open Command Prompt and Change directory (cd) to folder containing pom.xml/Import the projects into the IDE in order to launch them from there.
@@ -32,7 +32,7 @@ docker compose up -> to run the container inside Docker
 		2),3)	persitence-service/transaction-service, doesn't really matter, the only thing is that they must register to the service discovery server.
 		4)	api-gateway
 
-## The applications can be found at the following ports:(existing configuration)
+#### The applications can be found at the following ports:(existing configuration)
 eureka-server port: 8761(default)
 persitence-service port: 8000
 transaction-service port: 8100
@@ -40,11 +40,11 @@ api-gateway port: 8765
 
 They can be changed based on your environment using command line arguments -Dserver.port=XXXX, with the desired port.
 
-# Endpoints to access the resources exposed by the applications:
+#### Endpoints to access the resources exposed by the applications:
 Microservice 1 (transaction-service) -> The main endpoints for the microservice are:
-localhost:8100/api/transactions, GET-> returns all the transactions
-localhost:8100/api/transactions/report, GET-> returns the report for each user of the application, with it's transactions.
-localhost:8100/transactions, POST with the content in this JSON structure: 
+- localhost:8100/api/transactions, GET-> returns all the transactions
+- localhost:8100/api/transactions/report, GET-> returns the report for each user of the application, with it's transactions.
+- localhost:8100/transactions, POST with the content in this JSON structure: 
 {
 "transactionType": "IBAN_TO_WALLET",
 "name": "George",
@@ -66,7 +66,7 @@ The second way to access the persistence-service enpoints is through the Zuul Pr
 
 Lastly, using spring-cloud-sleuth, i enabled log tracing through distributed microservices, in order to trace the log informations between microservices.
 
-# MENTIONS: i did not implemented a centralized server for logging, it could be Zipkin or ELK stack in order to see the whole flow of the message/requests and the duration of the process.
+#### MENTIONS: i did not implemented a centralized server for logging, it could be Zipkin or ELK stack in order to see the whole flow of the message/requests and the duration of the process.
 I did not implemented also the config server for centralized configuration, using the git repo for my configuration, used to refresh the properties without build and deployment, just using the actuator /refresh endpoint.
 Also missing from the applications is the security part, which can be implement easly in the gateway, with in-memory/database/oauth2 security.
 Also i don't have a front-end for the application for better look of the extracted data.
