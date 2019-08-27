@@ -1,6 +1,7 @@
 # Transactions demo application
 
 ## Installing Tools
+- Java 8
 - Eclipse/IDEA/STS/NetBeans/etc
 - Maven
 - Postman/Other rest client
@@ -44,7 +45,7 @@ They can be changed based on your environment using command line arguments -Dser
 Microservice 1 (transaction-service) -> The main endpoints for the microservice are:
 - localhost:8100/api/transactions, GET-> returns all the transactions
 - localhost:8100/api/transactions/report, GET-> returns the report for each user of the application, with it's transactions.
-- localhost:8100/transactions, POST with the content in this JSON structure: 
+- localhost:8100/api/transactions, POST with the content in this JSON structure:
 {
 "transactionType": "IBAN_TO_WALLET",
 "name": "George",
@@ -52,10 +53,25 @@ Microservice 1 (transaction-service) -> The main endpoints for the microservice 
 "iban": "RO34232SDGWD3234324",
 "description": "transfer",
 "amount": 500
+} 
+
+##### Accessing the service via the api-gateway
+- localhost:8765/transaction-service/api/transactions, GET
+- localhost:8765/transaction-service/api/transactions/report, GET
+- localhost:8765/transaction-service/api/transactions, POST with body: 
+{
+"transactionType": "IBAN_TO_WALLET",
+"name": "George",
+"cnp": "1936605562840",
+"iban": "RO34232SDGWD3234324",
+"description": "plata",
+"amount": 100.1
 }
 
+BeanValidation is used for input validation, and other properties besides the required ones are ignored by Jackson.
+
 Hystrix is used in case of failure of the peristence-service, having fallback methods for each request, returning no content, until the service is back on.
-While the service is down, all the incoming transactions to be created are stored in the queue in RabbitMQ, and will be persisted when the peristence-service will be back on.
+While the service is down, all the incoming transactions to be created are stored in the queue in RabbitMQ, and will be persisted when the peristence-service will be back on.(Spring-cloud-stream)
 In order to see the messages in the rabbitMQ you need to enable the console and login with : guest/guest. The channel is configured as transactions, and the group is transactions-group.(configured properties)
 Ribbon is used to load balance the available services for persistence, based on the application name in eureka.
 
@@ -67,6 +83,7 @@ The second way to access the persistence-service enpoints is through the Zuul Pr
 Lastly, using spring-cloud-sleuth, i enabled log tracing through distributed microservices, in order to trace the log informations between microservices.
 
 #### MENTIONS: 
+The report is generated in the first microservice, using Java 8.
 I did not implemented a centralized server for logging, it could be Zipkin or ELK stack in order to see the whole flow of the message/requests and the duration of the process.
 I did not implemented also the config server for centralized configuration, using the git repo for my configuration, used to refresh the properties without build and deployment, just using the actuator /refresh endpoint.
 Also missing from the applications is the security part, which can be implement easly in the gateway, with in-memory/database/oauth2 security.

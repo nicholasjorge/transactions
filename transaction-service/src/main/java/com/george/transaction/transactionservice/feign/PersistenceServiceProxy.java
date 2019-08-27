@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 public interface PersistenceServiceProxy {
 
-    @GetMapping("/transactions")
+    @GetMapping("/persistence-service/transactions")
     public Resources<TransactionDto> getTransactions();
 
 }

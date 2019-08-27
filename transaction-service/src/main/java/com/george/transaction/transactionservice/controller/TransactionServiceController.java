@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 @Slf4j
@@ -53,14 +54,14 @@ public class TransactionServiceController {
     }
 
     @PostMapping
-    public void write(@RequestBody TransactionDto transaction) {
+    public void write(@RequestBody @Valid TransactionDto transaction) {
         this.writer.write(transaction);
     }
 
     @GetMapping("/report")
     @HystrixCommand(fallbackMethod = "fallbackReport")
     public ResponseEntity<Map> getReport() {
-
+        log.info("Entered the report generation endpoint in transaction-service");
         ResponseEntity<Resources<TransactionDto>> transactions = restTemplate
                 .exchange(PERSISTENCE_SERVICE_TRANSACTIONS_URL, HttpMethod.GET, null, new ParameterizedTypeReference<Resources<TransactionDto>>() {
                 });
@@ -90,6 +91,7 @@ public class TransactionServiceController {
 
     @GetMapping("/feign")
     public ResponseEntity getTransactionsFeign() {
+        log.info("Calling the persistence-service using feign client");
         return new ResponseEntity(persistenceServiceFeignProxy.getTransactions(), HttpStatus.OK);
     }
 
