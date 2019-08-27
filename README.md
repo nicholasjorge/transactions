@@ -21,7 +21,7 @@
 
 ADVICE: The easiest way to have access to RabbitMQ is to have Docker installed and start a container based on the image rabbitmq, there is a docker-compose.yml file in the root directory.
 
-docker-compose up -> to run the container inside Docker
+`docker-compose up` -> to run the container inside Docker
 
 #### Running the applications
 - Download the zip or clone the Git repository.
@@ -29,11 +29,12 @@ docker-compose up -> to run the container inside Docker
 - Open Command Prompt and Change directory (cd) to folder containing pom.xml/Import the projects into the IDE in order to launch them from there.
 - Before launching the applications make sure the rabbitMQ container/server is running. PS: the app is configured to run with the default ports for rabbitMQ !!!
 - IMPORTAT!! Run the applicatins as spring boot app, they must be run in a specific order:
-		- 1)	eureka-server
-		- 2),3)	persitence-service/transaction-service, doesn't really matter, the only thing is that they must register to the service discovery server.
-		- 4)	api-gateway
+    1)	eureka-server
+    2)  persitence-service
+    3)  transaction-service, doesn't really matter, the only thing is that they must register to the service discovery server.
+    4)	api-gateway
 
-#### The applications can be found at the following ports:(existing configuration)
+#### The applications can be found at the following ports(current configuration):
 - eureka-server port: 8761(default)
 - persitence-service port: 8000
 - transaction-service port: 8100
@@ -42,10 +43,12 @@ docker-compose up -> to run the container inside Docker
 They can be changed based on your environment using command line arguments -Dserver.port=XXXX, with the desired port.
 
 #### Endpoints to access the resources exposed by the applications:
-Microservice 1 (transaction-service) -> The main endpoints for the microservice are:
+#####Microservice 1 (transaction-service) -> The main endpoints for the microservice are:
 - localhost:8100/api/transactions, GET-> returns all the transactions
 - localhost:8100/api/transactions/report, GET-> returns the report for each user of the application, with it's transactions.
 - localhost:8100/api/transactions, POST with the content in this JSON structure:
+
+```` json
 {
 "transactionType": "IBAN_TO_WALLET", //only those 4 allowed types
 "name": "George",                   //max 255 chars, empty or null not allowed
@@ -54,27 +57,20 @@ Microservice 1 (transaction-service) -> The main endpoints for the microservice 
 "description": "transfer",          //max 255 chars, not required
 "amount": 500                       //max 9 integers, with 2 decimals
 } 
+````
 BeanValidation is used for input validation, and other properties besides the required ones are ignored by Jackson.
 
 ##### Accessing the service via the api-gateway
 - localhost:8765/transaction-service/api/transactions, GET
 - localhost:8765/transaction-service/api/transactions/report, GET
-- localhost:8765/transaction-service/api/transactions, POST with body: 
-{
-"transactionType": "IBAN_TO_WALLET",
-"name": "George",
-"cnp": "1936605562840",
-"iban": "RO34232SDGWD3234324",
-"description": "plata",
-"amount": 100.10
-}
+- localhost:8765/transaction-service/api/transactions, POST 
 
 Hystrix is used in case of failure of the peristence-service, having fallback methods for each request, returning no content, until the service is back on.
 While the service is down, all the incoming transactions to be created are stored in the queue in RabbitMQ, and will be persisted when the peristence-service will be back on.(Spring-cloud-stream)
 In order to see the messages in the rabbitMQ you need to enable the console and login with : guest/guest. The channel is configured as transactions, and the group is transactions-group.(configured properties)
 Ribbon is used to load balance the available services for persistence, based on the application name in eureka.
 
-Microservice 2 (persistence-service): 
+#####Microservice 2 (persistence-service): 
 - locahost:8000/transactions -> return all records with self link (page,size,sort=optional).
 
 Spring Data REST exposes rest endpoints based on the respository, so the endpoints for the persitence-service will be /transactions, with HATEOAS support to make the service self-described.
