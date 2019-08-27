@@ -47,13 +47,14 @@ Microservice 1 (transaction-service) -> The main endpoints for the microservice 
 - localhost:8100/api/transactions/report, GET-> returns the report for each user of the application, with it's transactions.
 - localhost:8100/api/transactions, POST with the content in this JSON structure:
 {
-"transactionType": "IBAN_TO_WALLET",
-"name": "George",
-"cnp": "1936605562840",
-"iban": "RO34232SDGWD3234324",
-"description": "transfer",
-"amount": 500
+"transactionType": "IBAN_TO_WALLET", //only those 4 allowed types
+"name": "George",                   //max 255 chars, empty or null not allowed
+"cnp": "1936605562840",             //exactly 13chars, numeric, empty or null not allowed
+"iban": "RO34232SDGWD3234324",      //max 34 alphanumeric chars, empty or null not allowed
+"description": "transfer",          //max 255 chars, not required
+"amount": 500                       //max 9 integers, with 2 decimals
 } 
+BeanValidation is used for input validation, and other properties besides the required ones are ignored by Jackson.
 
 ##### Accessing the service via the api-gateway
 - localhost:8765/transaction-service/api/transactions, GET
@@ -65,17 +66,18 @@ Microservice 1 (transaction-service) -> The main endpoints for the microservice 
 "cnp": "1936605562840",
 "iban": "RO34232SDGWD3234324",
 "description": "plata",
-"amount": 100.1
+"amount": 100.10
 }
-
-BeanValidation is used for input validation, and other properties besides the required ones are ignored by Jackson.
 
 Hystrix is used in case of failure of the peristence-service, having fallback methods for each request, returning no content, until the service is back on.
 While the service is down, all the incoming transactions to be created are stored in the queue in RabbitMQ, and will be persisted when the peristence-service will be back on.(Spring-cloud-stream)
 In order to see the messages in the rabbitMQ you need to enable the console and login with : guest/guest. The channel is configured as transactions, and the group is transactions-group.(configured properties)
 Ribbon is used to load balance the available services for persistence, based on the application name in eureka.
 
-Microservice 2 (persitence-service): Spring Data REST exposes rest endpoints based on the respository, so the endpoints for the persitence-service will be /transactions, with HATEOAS support to make the service self-described.
+Microservice 2 (persistence-service): 
+- locahost:8000/transactions -> return all records with self link (page,size,sort=optional).
+
+Spring Data REST exposes rest endpoints based on the respository, so the endpoints for the persitence-service will be /transactions, with HATEOAS support to make the service self-described.
 The data is persisted into a H2 in-memory db, which can be accessed usign the /h2-console endpoint.
 
 The second way to access the persistence-service enpoints is through the Zuul Proxy, which routes the calls from outside, through the service discovery server, based on the application names: example -> localhost:8100/persistence-service/transactions, this is what is called an "edge service".
