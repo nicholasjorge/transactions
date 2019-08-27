@@ -43,21 +43,29 @@ ADVICE: The easiest way to have access to RabbitMQ is to have Docker installed a
 They can be changed based on your environment using command line arguments -Dserver.port=XXXX, with the desired port.
 
 #### Endpoints to access the resources exposed by the applications:
-#####Microservice 1 (transaction-service) -> The main endpoints for the microservice are:
+####Microservice 1 (transaction-service) -> The main endpoints for the microservice are:
 - localhost:8100/api/transactions, GET-> returns all the transactions
 - localhost:8100/api/transactions/report, GET-> returns the report for each user of the application, with it's transactions.
 - localhost:8100/api/transactions, POST with the content in this JSON structure:
 
 ```` json
 {
-"transactionType": "IBAN_TO_WALLET", //only those 4 allowed types
-"name": "George",                   //max 255 chars, empty or null not allowed
-"cnp": "1936605562840",             //exactly 13chars, numeric, empty or null not allowed
-"iban": "RO34232SDGWD3234324",      //max 34 alphanumeric chars, empty or null not allowed
-"description": "transfer",          //max 255 chars, not required
-"amount": 500                       //max 9 integers, with 2 decimals
+"transactionType": "IBAN_TO_WALLET",
+"name": "George",
+"cnp": "1936605562840",
+"iban": "RO34232SDGWD3234324",
+"description": "transfer",
+"amount": 500.99
 } 
 ````
+Validation:
+- transactionType: only those 4 allowed types, not empty
+- name: max 255 chars, not empty or null
+- cnp: exactly 13 chars, numeric, not empty or null
+- iban: max 34 alphanumeric chars, not empty or null
+- description: max 255 chars, not required
+- amount: max 9 integers, with 2 decimals, positive numbers only
+ 
 BeanValidation is used for input validation, and other properties besides the required ones are ignored by Jackson.
 
 ##### Accessing the service via the api-gateway
@@ -70,7 +78,7 @@ While the service is down, all the incoming transactions to be created are store
 In order to see the messages in the rabbitMQ you need to enable the console and login with : guest/guest. The channel is configured as transactions, and the group is transactions-group.(configured properties)
 Ribbon is used to load balance the available services for persistence, based on the application name in eureka.
 
-#####Microservice 2 (persistence-service): 
+####Microservice 2 (persistence-service): 
 - locahost:8000/transactions -> return all records with self link (page,size,sort=optional).
 
 Spring Data REST exposes rest endpoints based on the respository, so the endpoints for the persitence-service will be /transactions, with HATEOAS support to make the service self-described.
