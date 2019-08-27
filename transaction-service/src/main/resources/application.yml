@@ -1,16 +1,21 @@
 spring:
-   application:
-      name: transaction-service
-   cloud:
-      stream:
-         bindings:
-            output:
-               destination: transactions
+  application:
+    name: transaction-service
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: transactions
 server:
-   port: 8100
+  port: 8100
 eureka:
-   client:
-#      registerWithEureka: true
-#      fetchRegistry: true
-      serviceUrl:
-         defaultZone: http://localhost:8761/eureka/
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000

@@ -1,14 +1,13 @@
 package com.george.transaction.transactionservice.messaging;
 
+import com.george.transaction.transactionservice.dto.TransactionDto;
 import org.springframework.integration.annotation.Gateway;
 import org.springframework.integration.annotation.MessagingGateway;
 
-import com.george.transaction.transactionservice.dto.TransactionDto;
-
 @MessagingGateway
-interface TransactionWriter {
+public interface TransactionWriter {
 
-	@Gateway(requestChannel = "output")
-	void write(TransactionDto transaction);
+    @Gateway(requestChannel = "output")
+    void write(TransactionDto transaction);
 
 }
