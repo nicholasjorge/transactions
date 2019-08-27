@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.george.transaction.transactionservice.validation.Enum;
 import lombok.Data;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -24,10 +21,11 @@ public class TransactionDto implements Serializable {
     @Size(max = 255, message = "Name must not exceed 255 characters")
     private String name;
     @NotBlank(message = "CNP must not be empty")
-    @Size(max = 13, message = "CNP must not exceed 13 characters")
+    @Pattern(regexp = "^(\\d{13})?$", message = "CNP must be 13 numbers long")
     private String cnp;
     @NotBlank(message = "IBAN must not be empty")
-    @Size(max = 25, message = "IBAN must not exceed 25 characters")
+    @Size(max = 34, message = "IBAN must not exceed 34 characters")
+    @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "IBAN must be alphanumeric")
     private String iban;
     @Size(max = 255, message = "Description must not exceed 255 characters")
     private String description;

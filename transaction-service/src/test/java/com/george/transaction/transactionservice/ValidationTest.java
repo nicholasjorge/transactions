@@ -29,7 +29,7 @@ public class ValidationTest {
         dto = new TransactionDto();
         dto.setTransactionType("IBAN_TO_IBAN");
         dto.setName("George");
-        dto.setIban(RandomStringUtils.randomAlphanumeric(25));
+        dto.setIban(RandomStringUtils.randomAlphanumeric(34));
         dto.setCnp(RandomStringUtils.randomNumeric(13));
         dto.setAmount(new BigDecimal(RandomStringUtils.randomNumeric(4)));
         dto.setDescription(RandomStringUtils.randomAlphabetic(100));
@@ -70,10 +70,10 @@ public class ValidationTest {
 
     @Test
     public void testIbanLength() {
-        dto.setIban(RandomStringUtils.randomAlphanumeric(26));
+        dto.setIban(RandomStringUtils.randomAlphanumeric(50));
         Set<ConstraintViolation<TransactionDto>> constraintViolations = validator.validate(dto);
         Assert.assertThat(1, Matchers.is(constraintViolations.size()));
-        Assert.assertThat("IBAN must not exceed 25 characters", Matchers.is(constraintViolations.stream().map(ConstraintViolation::getMessage).findFirst().get()));
+        Assert.assertThat("IBAN must not exceed 34 characters", Matchers.is(constraintViolations.stream().map(ConstraintViolation::getMessage).findFirst().get()));
     }
 
     @Test
@@ -97,7 +97,7 @@ public class ValidationTest {
         dto.setCnp(RandomStringUtils.randomAlphanumeric(14));
         Set<ConstraintViolation<TransactionDto>> constraintViolations = validator.validate(dto);
         Assert.assertThat(1, Matchers.is(constraintViolations.size()));
-        Assert.assertThat("CNP must not exceed 13 characters", Matchers.is(constraintViolations.stream().map(ConstraintViolation::getMessage).findFirst().get()));
+        Assert.assertThat("CNP must be 13 numbers long", Matchers.is(constraintViolations.stream().map(ConstraintViolation::getMessage).findFirst().get()));
     }
 
     @Test
