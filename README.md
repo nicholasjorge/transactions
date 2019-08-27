@@ -20,7 +20,7 @@
 
 ADVICE: The easiest way to have access to RabbitMQ is to have Docker installed and start a container based on the image rabbitmq, there is a docker-compose.yml file in the root directory.
 
-docker compose up -> to run the container inside Docker
+docker-compose up -> to run the container inside Docker
 
 #### Running the applications
 - Download the zip or clone the Git repository.

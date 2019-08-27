@@ -1,6 +1,7 @@
 package com.george.transaction.transactionservice.controller;
 
 import com.george.transaction.transactionservice.dto.TransactionDto;
+import com.george.transaction.transactionservice.feign.PersistenceServiceFeignProxy;
 import com.george.transaction.transactionservice.messaging.TransactionWriter;
 import com.george.transaction.transactionservice.service.TransactionService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
@@ -21,7 +22,9 @@ import java.util.Map;
 @RequestMapping("/api/transactions")
 public class TransactionServiceController {
 
-    private PersistenceServiceProxy persistenceServiceProxy;
+    public static final String PERSISTENCE_SERVICE_TRANSACTIONS_URL = "http://persistence-service/transactions/";
+
+    private PersistenceServiceFeignProxy persistenceServiceFeignProxy;
     private TransactionService transactionService;
     private TransactionWriter writer;
 
@@ -29,8 +32,9 @@ public class TransactionServiceController {
     private RestTemplate restTemplate;
 
     @Autowired
-    public TransactionServiceController(final PersistenceServiceProxy persistenceServiceProxy, final TransactionService transactionService, final TransactionWriter writer) {
-        this.persistenceServiceProxy = persistenceServiceProxy;
+    public TransactionServiceController(final PersistenceServiceFeignProxy persistenceServiceFeignProxy, final TransactionService transactionService,
+                                        final TransactionWriter writer) {
+        this.persistenceServiceFeignProxy = persistenceServiceFeignProxy;
         this.transactionService = transactionService;
         this.writer = writer;
     }
@@ -39,7 +43,7 @@ public class TransactionServiceController {
     @HystrixCommand(fallbackMethod = "fallback")
     public ResponseEntity<Resources<TransactionDto>> getTransactions() {
         log.info("Calling persistence-service using restTemplate");
-        return restTemplate.exchange("http://persistence-service/transactions/", HttpMethod.GET, null, new ParameterizedTypeReference<Resources<TransactionDto>>() {
+        return restTemplate.exchange(PERSISTENCE_SERVICE_TRANSACTIONS_URL, HttpMethod.GET, null, new ParameterizedTypeReference<Resources<TransactionDto>>() {
         });
     }
 
@@ -58,7 +62,7 @@ public class TransactionServiceController {
     public ResponseEntity<Map> getReport() {
 
         ResponseEntity<Resources<TransactionDto>> transactions = restTemplate
-                .exchange("http://persistence-service/transactions", HttpMethod.GET, null, new ParameterizedTypeReference<Resources<TransactionDto>>() {
+                .exchange(PERSISTENCE_SERVICE_TRANSACTIONS_URL, HttpMethod.GET, null, new ParameterizedTypeReference<Resources<TransactionDto>>() {
                 });
 
         Map report = transactionService.getReport(transactions.getBody().getContent());
@@ -83,5 +87,10 @@ public class TransactionServiceController {
     //        log.warn("Entered the fallbackMethod in the transaction-service");
     //        return new ResponseEntity<Resources<TransactionDto>>(HttpStatus.NO_CONTENT);
     //    }
+
+    @GetMapping("/feign")
+    public ResponseEntity getTransactionsFeign() {
+        return new ResponseEntity(persistenceServiceFeignProxy.getTransactions(), HttpStatus.OK);
+    }
 
 }

@@ -3,9 +3,6 @@ package com.george.transaction.eurekaserver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @EnableEurekaServer
 @SpringBootApplication
@@ -15,7 +12,7 @@ public class EurekaServerApplication {
         SpringApplication.run(EurekaServerApplication.class, args);
     }
 
-    @EnableWebSecurity
+ /*   @EnableWebSecurity
     static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
@@ -27,17 +24,17 @@ public class EurekaServerApplication {
             //                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
             //            http.cors().and()
-        }
+        }*/
 
-        //        @Bean
-        //        CorsConfigurationSource corsConfigurationSource() {
-        //            CorsConfiguration configuration = new CorsConfiguration();
-        //            configuration.setAllowedOrigins(Arrays.asList("https://example.com"));
-        //            configuration.setAllowedMethods(Arrays.asList("GET","POST"));
-        //            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        //            source.registerCorsConfiguration("/**", configuration);
-        //            return source;
-        //        }
-    }
+    //        @Bean
+    //        CorsConfigurationSource corsConfigurationSource() {
+    //            CorsConfiguration configuration = new CorsConfiguration();
+    //            configuration.setAllowedOrigins(Arrays.asList("https://example.com"));
+    //            configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+    //            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //            source.registerCorsConfiguration("/**", configuration);
+    //            return source;
+    //        }
+    //}
 
 }
