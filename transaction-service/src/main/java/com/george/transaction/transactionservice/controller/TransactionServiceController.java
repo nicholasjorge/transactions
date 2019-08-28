@@ -89,10 +89,10 @@ public class TransactionServiceController {
     //        return new ResponseEntity<Resources<TransactionDto>>(HttpStatus.NO_CONTENT);
     //    }
 
-    @GetMapping("/feign")
-    public ResponseEntity getTransactionsFeign() {
-        log.info("Calling the persistence-service using feign client");
-        return new ResponseEntity(persistenceServiceFeignProxy.getTransactions(), HttpStatus.OK);
-    }
+    //    @GetMapping("/feign")
+    //    public ResponseEntity getTransactionsFeign() {
+    //        log.info("Calling the persistence-service using feign client");
+    //        return new ResponseEntity(persistenceServiceFeignProxy.getTransactions(), HttpStatus.OK);
+    //    }
 
 }

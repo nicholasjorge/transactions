@@ -4,7 +4,10 @@ import com.george.transaction.transactionservice.dto.TransactionDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -14,11 +17,6 @@ import java.util.stream.Collectors;
 public class TransactionServiceImpl implements TransactionService {
 
     @Override
-    public Collection<TransactionDto> getTransactions() {
-        return null;
-    }
-
-    @Override
     public Map getReport(final Collection<TransactionDto> transactions) {
         //        Map<Object,List<TransactionDto>> groupedData = transactions.stream()
         //                .collect(Collectors.groupingBy(p -> Arrays.asList(p.getName(), p.getIban(), p.getTransactionType(), p.getCnp())));
@@ -26,18 +24,13 @@ public class TransactionServiceImpl implements TransactionService {
         return collectMany;
     }
 
-    @Override
-    public TransactionDto createTransaction(final TransactionDto transaction) {
-        return null;
-    }
-
-    private Collector<TransactionDto,?,Map<String,Map<String,List<TransactionDto>>>> byIbanAndType() {
-        return Collectors.groupingBy(TransactionDto::getIban, Collectors.groupingBy(TransactionDto::getTransactionType));
-    }
-
-    private Collector<TransactionDto,?,Map<String,Long>> byIbanAndCount() {
-        return Collectors.groupingBy(TransactionDto::getIban, Collectors.counting());
-    }
+    //    private Collector<TransactionDto,?,Map<String,Map<String,List<TransactionDto>>>> byIbanAndType() {
+    //        return Collectors.groupingBy(TransactionDto::getIban, Collectors.groupingBy(TransactionDto::getTransactionType));
+    //    }
+    //
+    //    private Collector<TransactionDto,?,Map<String,Long>> byIbanAndCount() {
+    //        return Collectors.groupingBy(TransactionDto::getIban, Collectors.counting());
+    //    }
 
     private static <T> Map collectMany(Collection<T> data, Function<T,?>... groupers) {
         //		Collections.reverse(Arrays.asList(groupers));

@@ -7,10 +7,6 @@ import java.util.Map;
 
 public interface TransactionService {
 
-    Collection<TransactionDto> getTransactions();
-
     Map getReport(final Collection<TransactionDto> transactions);
-
-    TransactionDto createTransaction(final TransactionDto transaction);
 
 }
