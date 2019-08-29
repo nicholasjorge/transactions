@@ -21,11 +21,8 @@ public class PreLoggingFilter extends ZuulFilter {
 
     @Override
     public Object run() throws ZuulException {
-
         HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
-        log.info("Inside Api Gateway Logging Filter");
-        log.info("Request -> {}, RequestUri-> {}, Request Params : {}", request, request.getRequestURI(), request.getParameterNames());
-
+        log.info("LoggingFiler: Request -> {}, RequestUri-> {}, Request Params : {}", request.toString(), request.getRequestURI(), request.getParameterNames().toString());
         return null;
     }
 

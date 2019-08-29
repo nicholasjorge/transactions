@@ -11,7 +11,9 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.context.annotation.Bean;
 import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.web.client.RestTemplate;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+@EnableSwagger2
 @EnableBinding(TransactionChannels.class)
 @IntegrationComponentScan
 //@EnableZuulProxy
@@ -30,10 +32,5 @@ public class TransactionServiceApplication {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
-    //	@Bean
-    //	public Sampler defaultSampler() {
-    //		return Sampler.ALWAYS_SAMPLE;
-    //	}
 
 }

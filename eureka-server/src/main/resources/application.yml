@@ -1,10 +1,6 @@
 spring:
   application:
     name: eureka-server
-#  security:
-#    user:
-#      name: admin
-#      password: admin
 server:
   port: 8761
 eureka:
@@ -15,8 +11,3 @@ eureka:
     fetchRegistry: false
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
