@@ -2,15 +2,20 @@ package com.george.transaction.persistenceservice.service;
 
 import com.george.transaction.persistenceservice.model.Report;
 import com.george.transaction.persistenceservice.model.Transaction;
+import com.george.transaction.persistenceservice.model.TransactionType;
 import com.george.transaction.persistenceservice.repository.TransactionRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.function.Function;
+import java.math.BigDecimal;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class PersistenceServiceImpl implements PersistenceService {
 
@@ -22,20 +27,31 @@ public class PersistenceServiceImpl implements PersistenceService {
     }
 
     @Override
-    public Report getReport() {
+    public List<Report> getReport() {
         List<Transaction> transactions = transactionRepository.findAll();
-        Map collectMany = collectMany(transactions, Transaction::getCnp, Transaction::getTransactionType, Transaction::getIban, Transaction::getName);
-        //TODO implement report
-        return null;
+        List<Report> reports = processTransactions(transactions);
+        return reports;
     }
 
-    private static <T> Map collectMany(Collection<T> data, Function<T,?>... groupers) {
-        //		Collections.reverse(Arrays.asList(groupers));
-        Iterator<Function<T,?>> iter = Arrays.asList(groupers).iterator();
-        Collector collector = Collectors.groupingBy(iter.next());
-        while (iter.hasNext()) {
-            collector = Collectors.groupingBy(iter.next(), collector);
+    private List<Report> processTransactions(final List<Transaction> transactions) {
+        log.info("Processing {} transactions.", transactions.size());
+        Map<String,List<Transaction>> groupedByIBAN = transactions.stream().collect(Collectors.groupingBy(Transaction::getIban));
+        List<Report> reports = new LinkedList<>();
+        for (Map.Entry<String,List<Transaction>> entry : groupedByIBAN.entrySet()) {
+            Report report = new Report();
+            report.setIban(entry.getKey());
+            List<Transaction> transactionsByIBAN = entry.getValue();
+            report.setTransactionsCount(transactionsByIBAN.size());
+            Map<TransactionType,Map<String,BigDecimal>> details = transactionsByIBAN.stream().collect(Collectors.groupingBy(Transaction::getTransactionType, byCNPAndSum()));
+            report.setDetails(details);
+            reports.add(report);
         }
-        return (Map) data.stream().collect(collector);
+        log.info("Generated {} records.", reports.size());
+        return reports;
     }
+
+    private Collector<Transaction,?,Map<String,BigDecimal>> byCNPAndSum() {
+        return Collectors.groupingBy(Transaction::getCnp, Collectors.reducing(BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add));
+    }
+
 }

@@ -2,8 +2,10 @@ package com.george.transaction.persistenceservice.service;
 
 import com.george.transaction.persistenceservice.model.Report;
 
+import java.util.List;
+
 public interface PersistenceService {
 
-    Report getReport();
+    List<Report> getReport();
 
 }

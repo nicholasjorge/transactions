@@ -1,4 +1,4 @@
-package com.george.transaction.persistenceservice.config;
+package com.george.transaction.transactionservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +17,7 @@ public class Swagger2Config {
     public Docket swaggerConfig() {
         return new Docket(DocumentationType.SWAGGER_2).groupName("transactions").select().paths(PathSelectors.any()).build()
                 .apiInfo(apiInfo("Transactions API", "RESTful API Documentation for Transactions Management"));
+
     }
 
     private ApiInfo apiInfo(String title, String description) {

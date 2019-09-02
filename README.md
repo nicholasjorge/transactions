@@ -1,5 +1,5 @@
 # Transactions demo application
-
+//TODO update
 ## Installing Tools
 - Java 8
 - Eclipse/IDEA/STS/NetBeans/etc

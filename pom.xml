@@ -8,7 +8,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <!--        <module>config-server</module>-->
         <module>eureka-server</module>
         <module>persistence-service</module>
         <module>transaction-service</module>
