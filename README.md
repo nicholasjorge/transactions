@@ -42,6 +42,8 @@ ADVICE: The easiest way to have access to RabbitMQ is to have Docker installed a
 
 You can change the application.yml files for other specific ports or based on your environment using command line arguments -Dserver.port=XXXX on starting, with the desired port.
 
+Also, Swagger2 UI is available for both microservices, at the following endpoint: /swagger-ui.html
+
 ####Microservice 1 (transaction-service)
 - POST localhost:8100/api/transactions, with the content in this JSON structure to create a transaction:
 
@@ -69,7 +71,7 @@ BeanValidation is used for input validation, and other properties besides the re
 ####Microservice 2 (persistence-service): 
 - GET locahost:8000/persistence/report -> returns the required report for the transactions: grouped by IBAN, counting the transactions, and grouping them based on the type and cnp of the client, summing the amount per client, per type.
 
-The data is persisted into a H2 in-memory db, which can be accessed usign the /h2-console endpoint.
+The data is persisted into a H2 in-memory db, which can be accessed usign the /h2-console endpoint. (JDBC URL: jdbc:h2:mem:testdb)
 
 ##### Accessing the services via the api-gateway
 - localhost:8765/transaction-service/api/transactions, POST with the above structure
@@ -77,7 +79,6 @@ The data is persisted into a H2 in-memory db, which can be accessed usign the /h
 
 While the service is down, all the incoming transactions to be created are stored in the queue in RabbitMQ, and will be persisted when the peristence-service will be back on.(Spring-cloud-stream)
 In order to see the messages in the rabbitMQ you need to enable the console and login with : guest/guest. The channel is configured as transactions, and the group is transactions-group.(configured properties)
-Ribbon is used to load balance the available services for persistence, based on the application name in eureka.
 
 #### MENTIONS: 
 I did not implemented a centralized server for logging, it could be Zipkin or ELK stack in order to see the whole flow of the message/requests and the duration of the process.
